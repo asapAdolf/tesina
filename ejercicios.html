@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprende Bases de Datos Jugando</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            /* Oculto por defecto para hacerlos secuenciales */
+        }
+
+        .card.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .highlight {
+            background-color: #f1c40f !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1> Tu Primera Base de Datos</h1>
+
+        <div class="card active" id="step0">
+            <h2>Antes de empezar...</h2>
+            <p>Elige tu mundo favorito para aprender sobre bases de datos:</p>
+            <select id="analogySelect">
+                <option value="">-- Selecciona una analogía --</option>
+                <option value="biblioteca">Biblioteca (Libros, Estantes)</option>
+                <option value="musica">Música (Notas, Partituras)</option>
+                <option value="deportes">Deportes (Jugadores, Equipos)</option>
+                <option value="ciudad">Ciudad (Casas, Colonias)</option>
+                <option value="naturaleza">Naturaleza (Hojas, Árboles)</option>
+            </select>
+            <button onclick="iniciar()">¡Comenzar!</button>
+        </div>
+
+        <div class="card" id="step1">
+            <h2>Nivel 1: El Cazador de Datos (El Registro)</h2>
+            <p>Un registro es la unidad más pequeña de información. En tu mundo, esto es un <strong
+                    id="lbl_dato"></strong>.</p>
+            <label>Dale un nombre o título a tu primer dato:</label>
+            <input type="text" id="dato_nombre" placeholder="Ejemplo: El Principito, Messi, Do...">
+            <button onclick="nextStep(2)">Siguiente Nivel</button>
+        </div>
+
+        <div class="card" id="step2">
+            <h2>Nivel 2: El DNI del Dato (Atributos/Columnas)</h2>
+            <p>Ahora vamos a describir a "<strong id="display_dato_nombre"></strong>". Inventa 2 características
+                (Columnas) para describirlo.</p>
+            <input type="text" id="col1" placeholder="Característica 1 (Ej. Autor, Posición, Color)">
+            <input type="text" id="val1" placeholder="Valor 1 (Ej. Antoine, Delantero, Verde)">
+            <hr>
+            <input type="text" id="col2" placeholder="Característica 2 (Ej. Páginas, Edad, Tamaño)">
+            <input type="text" id="val2" placeholder="Valor 2 (Ej. 96, 35, Pequeño)">
+            <button onclick="nextStep(3)">Siguiente Nivel</button>
+        </div>
+
+        <div class="card" id="step3">
+            <h2>Nivel 3: Armando la Colección (La Tabla)</h2>
+            <p>Un solo dato es aburrido. Vamos a crear tu <strong id="lbl_tabla"></strong> (Tabla) agregando dos
+                registros más usando las mismas columnas.</p>
+
+            <h4>Dato 2:</h4>
+            <input type="text" id="d2_nombre" placeholder="Nombre">
+            <input type="text" id="d2_v1" placeholder="Valor Característica 1">
+            <input type="text" id="d2_v2" placeholder="Valor Característica 2">
+
+            <h4>Dato 3:</h4>
+            <input type="text" id="d3_nombre" placeholder="Nombre">
+            <input type="text" id="d3_v1" placeholder="Valor Característica 1">
+            <input type="text" id="d3_v2" placeholder="Valor Característica 2">
+
+            <button onclick="generarTabla(); nextStep(4)">Crear Tabla</button>
+        </div>
+
+        <div class="card" id="step4">
+            <h2>Nivel 4: El Código Secreto (Llave Primaria)</h2>
+            <p>Para no confundir los datos, a cada fila se le asigna un ID único (Llave Primaria). Mira cómo quedó tu
+                tabla:</p>
+            <div id="tabla_render_1"></div>
+            <button onclick="nextStep(5)">Siguiente Nivel</button>
+        </div>
+
+        <div class="card" id="step5">
+            <h2>Nivel 5: Tejiendo la Red (Relaciones)</h2>
+            <p>Las tablas se conectan. Imagina que un <strong id="lbl_relacion"></strong> interactúa con el dato ID: 1.
+            </p>
+            <p><strong>Ejemplo de Relación Creada:</strong> El usuario "Alex" ha solicitado interactuar con el registro
+                cuyo ID es 1.</p>
+            <p><em>¡Así es como bases de datos gigantes como Facebook o Netflix conectan tu perfil con las películas o
+                    amigos que tienes!</em></p>
+            <button onclick="prepararBusqueda(); nextStep(6)">Siguiente Nivel</button>
+        </div>
+
+        <div class="card" id="step6">
+            <h2>Nivel 6: El Detective (Consultas/Queries)</h2>
+            <p>Usa este buscador simulado para hacer una consulta (Query) a tu tabla y encontrar a un dato por su
+                nombre.</p>
+            <input type="text" id="busqueda" placeholder="Escribe el nombre de uno de tus datos...">
+            <button onclick="buscar()">Buscar (SELECT)</button>
+            <div id="tabla_render_2" style="margin-top: 20px;"></div>
+            <br>
+            <button onclick="location.reload()" style="background-color: #27ae60;">¡Jugar de Nuevo!</button>
+        </div>
+
+    </div>
+
+    <script>
+        const diccionarios = {
+            biblioteca: { dato: "Libro", tabla: "Estante", relacion: "Lector" },
+            musica: { dato: "Nota Musical", tabla: "Partitura", relacion: "Músico" },
+            deportes: { dato: "Jugador", tabla: "Equipo", relacion: "Entrenador" },
+            ciudad: { dato: "Casa", tabla: "Colonia", relacion: "Cartero" },
+            naturaleza: { dato: "Hoja", tabla: "Árbol", relacion: "Insecto" }
+        };
+
+        let bd = [];
+
+        function iniciar() {
+            const sel = document.getElementById("analogySelect").value;
+            if (!sel) { alert("¡Elige una analogía primero!"); return; }
+
+            document.getElementById("lbl_dato").innerText = diccionarios[sel].dato;
+            document.getElementById("lbl_tabla").innerText = diccionarios[sel].tabla;
+            document.getElementById("lbl_relacion").innerText = diccionarios[sel].relacion;
+
+            nextStep(1);
+        }
+
+        function nextStep(step) {
+            if (step === 2) {
+                const nombre = document.getElementById("dato_nombre").value;
+                if (!nombre) { alert("Ponle nombre a tu dato."); return; }
+                document.getElementById("display_dato_nombre").innerText = nombre;
+            }
+
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+        }
+
+        function generarTabla() {
+            const col1 = document.getElementById("col1").value || "Caract. 1";
+            const col2 = document.getElementById("col2").value || "Caract. 2";
+
+            bd = [
+                { id: 1, nombre: document.getElementById("dato_nombre").value, v1: document.getElementById("val1").value, v2: document.getElementById("val2").value },
+                { id: 2, nombre: document.getElementById("d2_nombre").value, v1: document.getElementById("d2_v1").value, v2: document.getElementById("d2_v2").value },
+                { id: 3, nombre: document.getElementById("d3_nombre").value, v1: document.getElementById("d3_v1").value, v2: document.getElementById("d3_v2").value }
+            ];
+
+            let htmlTabla = `<table><tr><th>ID (Llave)</th><th>Nombre</th><th>${col1}</th><th>${col2}</th></tr>`;
+            bd.forEach(row => {
+                htmlTabla += `<tr><td>${row.id}</td><td>${row.nombre}</td><td>${row.v1}</td><td>${row.v2}</td></tr>`;
+            });
+            htmlTabla += `</table>`;
+
+            document.getElementById("tabla_render_1").innerHTML = htmlTabla;
+        }
+
+        function prepararBusqueda() {
+            document.getElementById("tabla_render_2").innerHTML = document.getElementById("tabla_render_1").innerHTML;
+        }
+
+        function buscar() {
+            const termino = document.getElementById("busqueda").value.toLowerCase();
+            const filas = document.getElementById("tabla_render_2").getElementsByTagName("tr");
+
+            for (let i = 1; i < filas.length; i++) {
+                filas[i].classList.remove("highlight");
+                let nombreCelda = filas[i].getElementsByTagName("td")[1].innerText.toLowerCase();
+                if (nombreCelda.includes(termino) && termino !== "") {
+                    filas[i].classList.add("highlight");
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>
