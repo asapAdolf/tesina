@@ -98,6 +98,26 @@
         .highlight {
             background-color: #f1c40f !important;
         }
+
+        .ejemplo-container {
+            background-color: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .ejemplo-container h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #2980b9;
+            font-size: 1em;
+        }
+
+        .ejemplo-container table {
+            margin-top: 0;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 
@@ -124,6 +144,7 @@
             <h2>Nivel 1: El Cazador de Datos (El Registro)</h2>
             <p>Un registro es la unidad más pequeña de información. En tu mundo, esto es un <strong
                     id="lbl_dato"></strong>.</p>
+            <div class="ejemplo-container" id="ejemplo_step1"></div>
             <label>Dale un nombre o título a tu primer dato:</label>
             <input type="text" id="dato_nombre" placeholder="Ejemplo: El Principito, Messi, Do...">
             <button onclick="nextStep(2)">Siguiente Nivel</button>
@@ -133,6 +154,7 @@
             <h2>Nivel 2: El DNI del Dato (Atributos/Columnas)</h2>
             <p>Ahora vamos a describir a "<strong id="display_dato_nombre"></strong>". Inventa 2 características
                 (Columnas) para describirlo.</p>
+            <div class="ejemplo-container" id="ejemplo_step2"></div>
             <input type="text" id="col1" placeholder="Característica 1 (Ej. Autor, Posición, Color)">
             <input type="text" id="val1" placeholder="Valor 1 (Ej. Antoine, Delantero, Verde)">
             <hr>
@@ -145,6 +167,7 @@
             <h2>Nivel 3: Armando la Colección (La Tabla)</h2>
             <p>Un solo dato es aburrido. Vamos a crear tu <strong id="lbl_tabla"></strong> (Tabla) agregando dos
                 registros más usando las mismas columnas.</p>
+            <div class="ejemplo-container" id="ejemplo_step3"></div>
 
             <h4>Dato 2:</h4>
             <input type="text" id="d2_nombre" placeholder="Nombre">
@@ -156,7 +179,7 @@
             <input type="text" id="d3_v1" placeholder="Valor Característica 1">
             <input type="text" id="d3_v2" placeholder="Valor Característica 2">
 
-            <button onclick="generarTabla(); nextStep(4)">Crear Tabla</button>
+            <button onclick="nextStep(4)">Crear Tabla</button>
         </div>
 
         <div class="card" id="step4">
@@ -200,6 +223,43 @@
             naturaleza: { dato: "Hoja", tabla: "Árbol", relacion: "Insecto" }
         };
 
+        const ejemplos = {
+            biblioteca: {
+                dato: "El Principito", col1: "Autor", val1: "Antoine", col2: "Páginas", val2: "96",
+                d2: {nombre: "1984", v1: "G. Orwell", v2: "328"}, d3: {nombre: "Dune", v1: "F. Herbert", v2: "412"}
+            },
+            musica: {
+                dato: "Do", col1: "Tipo", val1: "Natural", col2: "Frecuencia", val2: "261 Hz",
+                d2: {nombre: "Re", v1: "Natural", v2: "293 Hz"}, d3: {nombre: "Fa#", v1: "Sostenido", v2: "370 Hz"}
+            },
+            deportes: {
+                dato: "Lionel Messi", col1: "Posición", val1: "Delantero", col2: "Dorsal", val2: "10",
+                d2: {nombre: "C. Ronaldo", v1: "Delantero", v2: "7"}, d3: {nombre: "K. De Bruyne", v1: "Mediocampista", v2: "17"}
+            },
+            ciudad: {
+                dato: "Casa Blanca", col1: "Color", val1: "Blanca", col2: "Habitaciones", val2: "132",
+                d2: {nombre: "Cabaña", v1: "Madera", v2: "3"}, d3: {nombre: "Mansión", v1: "Gris", v2: "15"}
+            },
+            naturaleza: {
+                dato: "Hoja de Roble", col1: "Color", val1: "Verde", col2: "Forma", val2: "Lobulada",
+                d2: {nombre: "Hoja de Pino", v1: "Verde Oscuro", v2: "Aguja"}, d3: {nombre: "Hoja de Arce", v1: "Rojo", v2: "Palmeada"}
+            }
+        };
+
+        function actualizarEjemplos(sel) {
+            const ej = ejemplos[sel];
+            const nombreDato = diccionarios[sel].dato;
+            
+            const html1 = `<h4>Ejemplo:</h4><table><tr><th>${nombreDato}</th></tr><tr><td>${ej.dato}</td></tr></table>`;
+            document.getElementById("ejemplo_step1").innerHTML = html1;
+
+            const html2 = `<h4>Ejemplo:</h4><table><tr><th>${nombreDato}</th><th>${ej.col1}</th><th>${ej.col2}</th></tr><tr><td>${ej.dato}</td><td>${ej.val1}</td><td>${ej.val2}</td></tr></table>`;
+            document.getElementById("ejemplo_step2").innerHTML = html2;
+
+            const html3 = `<h4>Ejemplo de Tabla Completa:</h4><table><tr><th>ID</th><th>${nombreDato}</th><th>${ej.col1}</th><th>${ej.col2}</th></tr><tr><td>1</td><td>${ej.dato}</td><td>${ej.val1}</td><td>${ej.val2}</td></tr><tr><td>2</td><td>${ej.d2.nombre}</td><td>${ej.d2.v1}</td><td>${ej.d2.v2}</td></tr><tr><td>3</td><td>${ej.d3.nombre}</td><td>${ej.d3.v1}</td><td>${ej.d3.v2}</td></tr></table>`;
+            document.getElementById("ejemplo_step3").innerHTML = html3;
+        }
+
         let bd = [];
 
         function iniciar() {
@@ -210,14 +270,36 @@
             document.getElementById("lbl_tabla").innerText = diccionarios[sel].tabla;
             document.getElementById("lbl_relacion").innerText = diccionarios[sel].relacion;
 
+            actualizarEjemplos(sel);
             nextStep(1);
         }
 
         function nextStep(step) {
             if (step === 2) {
-                const nombre = document.getElementById("dato_nombre").value;
-                if (!nombre) { alert("Ponle nombre a tu dato."); return; }
+                const nombre = document.getElementById("dato_nombre").value.trim();
+                if (!nombre) { alert("¡Ponle nombre a tu dato!"); return; }
                 document.getElementById("display_dato_nombre").innerText = nombre;
+            } else if (step === 3) {
+                const col1 = document.getElementById("col1").value.trim();
+                const val1 = document.getElementById("val1").value.trim();
+                const col2 = document.getElementById("col2").value.trim();
+                const val2 = document.getElementById("val2").value.trim();
+                if (!col1 || !val1 || !col2 || !val2) {
+                    alert("¡Por favor, llena las dos características y sus valores!");
+                    return;
+                }
+            } else if (step === 4) {
+                const d2_nombre = document.getElementById("d2_nombre").value.trim();
+                const d2_v1 = document.getElementById("d2_v1").value.trim();
+                const d2_v2 = document.getElementById("d2_v2").value.trim();
+                const d3_nombre = document.getElementById("d3_nombre").value.trim();
+                const d3_v1 = document.getElementById("d3_v1").value.trim();
+                const d3_v2 = document.getElementById("d3_v2").value.trim();
+                if (!d2_nombre || !d2_v1 || !d2_v2 || !d3_nombre || !d3_v1 || !d3_v2) {
+                    alert("¡Por favor, llena todos los campos para el Dato 2 y Dato 3!");
+                    return;
+                }
+                generarTabla();
             }
 
             document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
@@ -248,7 +330,8 @@
         }
 
         function buscar() {
-            const termino = document.getElementById("busqueda").value.toLowerCase();
+            const termino = document.getElementById("busqueda").value.toLowerCase().trim();
+            if (!termino) { alert("¡Por favor, escribe un término de búsqueda!"); return; }
             const filas = document.getElementById("tabla_render_2").getElementsByTagName("tr");
 
             for (let i = 1; i < filas.length; i++) {
