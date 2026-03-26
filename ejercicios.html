@@ -146,7 +146,7 @@
                     id="lbl_dato"></strong>.</p>
             <div class="ejemplo-container" id="ejemplo_step1"></div>
             <label>Dale un nombre o título a tu primer dato:</label>
-            <input type="text" id="dato_nombre" placeholder="Ejemplo: El Principito, Messi, Do...">
+            <input type="text" id="dato_nombre" placeholder="Nombre">
             <button onclick="nextStep(2)">Siguiente Nivel</button>
         </div>
 
@@ -155,11 +155,11 @@
             <p>Ahora vamos a describir a "<strong id="display_dato_nombre"></strong>". Inventa 2 características
                 (Columnas) para describirlo.</p>
             <div class="ejemplo-container" id="ejemplo_step2"></div>
-            <input type="text" id="col1" placeholder="Característica 1 (Ej. Autor, Posición, Color)">
-            <input type="text" id="val1" placeholder="Valor 1 (Ej. Antoine, Delantero, Verde)">
+            <input type="text" id="col1" placeholder="Característica 1">
+            <input type="text" id="val1" placeholder="Valor de característica 1">
             <hr>
-            <input type="text" id="col2" placeholder="Característica 2 (Ej. Páginas, Edad, Tamaño)">
-            <input type="text" id="val2" placeholder="Valor 2 (Ej. 96, 35, Pequeño)">
+            <input type="text" id="col2" placeholder="Característica 2">
+            <input type="text" id="val2" placeholder="Valor de característica 2">
             <button onclick="nextStep(3)">Siguiente Nivel</button>
         </div>
 
@@ -226,30 +226,30 @@
         const ejemplos = {
             biblioteca: {
                 dato: "El Principito", col1: "Autor", val1: "Antoine", col2: "Páginas", val2: "96",
-                d2: {nombre: "1984", v1: "G. Orwell", v2: "328"}, d3: {nombre: "Dune", v1: "F. Herbert", v2: "412"}
+                d2: { nombre: "1984", v1: "G. Orwell", v2: "328" }, d3: { nombre: "Dune", v1: "F. Herbert", v2: "412" }
             },
             musica: {
                 dato: "Do", col1: "Tipo", val1: "Natural", col2: "Frecuencia", val2: "261 Hz",
-                d2: {nombre: "Re", v1: "Natural", v2: "293 Hz"}, d3: {nombre: "Fa#", v1: "Sostenido", v2: "370 Hz"}
+                d2: { nombre: "Re", v1: "Natural", v2: "293 Hz" }, d3: { nombre: "Fa#", v1: "Sostenido", v2: "370 Hz" }
             },
             deportes: {
                 dato: "Lionel Messi", col1: "Posición", val1: "Delantero", col2: "Dorsal", val2: "10",
-                d2: {nombre: "C. Ronaldo", v1: "Delantero", v2: "7"}, d3: {nombre: "K. De Bruyne", v1: "Mediocampista", v2: "17"}
+                d2: { nombre: "C. Ronaldo", v1: "Delantero", v2: "7" }, d3: { nombre: "K. De Bruyne", v1: "Mediocampista", v2: "17" }
             },
             ciudad: {
                 dato: "Casa Blanca", col1: "Color", val1: "Blanca", col2: "Habitaciones", val2: "132",
-                d2: {nombre: "Cabaña", v1: "Madera", v2: "3"}, d3: {nombre: "Mansión", v1: "Gris", v2: "15"}
+                d2: { nombre: "Cabaña", v1: "Madera", v2: "3" }, d3: { nombre: "Mansión", v1: "Gris", v2: "15" }
             },
             naturaleza: {
                 dato: "Hoja de Roble", col1: "Color", val1: "Verde", col2: "Forma", val2: "Lobulada",
-                d2: {nombre: "Hoja de Pino", v1: "Verde Oscuro", v2: "Aguja"}, d3: {nombre: "Hoja de Arce", v1: "Rojo", v2: "Palmeada"}
+                d2: { nombre: "Hoja de Pino", v1: "Verde Oscuro", v2: "Aguja" }, d3: { nombre: "Hoja de Arce", v1: "Rojo", v2: "Palmeada" }
             }
         };
 
         function actualizarEjemplos(sel) {
             const ej = ejemplos[sel];
             const nombreDato = diccionarios[sel].dato;
-            
+
             const html1 = `<h4>Ejemplo:</h4><table><tr><th>${nombreDato}</th></tr><tr><td>${ej.dato}</td></tr></table>`;
             document.getElementById("ejemplo_step1").innerHTML = html1;
 
